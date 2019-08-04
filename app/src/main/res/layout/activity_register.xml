@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="@color/colorPrimary">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/text_hospiton_Signin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="54dp"
+                android:textColor="#FFFFFF"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"/>
+
+            <EditText
+                android:id="@+id/Signin_email_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_hospiton_Signin"
+                android:hint="@string/hintemail"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/edittext"
+                android:padding="6dp"
+                android:drawableLeft="@drawable/email"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"/>
+
+            <EditText
+                android:id="@+id/Signin_password_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Signin_email_view"
+                android:hint="@string/hintpassword"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/edittext"
+                android:padding="6dp"
+                android:drawableLeft="@drawable/password"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"/>
+
+            <Button
+                android:id="@+id/Signin_button_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/Signin_password_view"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/loginbutton"
+                android:textSize="24sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:text="Sign Up"
+                android:textColor="@android:color/background_light"/>
+
+            <TextView
+                android:id="@+id/Signin_Need_New_account_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/AccountCreatd"
+                android:layout_below="@+id/Signin_button_view"
+                android:textStyle="bold"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="2dp"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
