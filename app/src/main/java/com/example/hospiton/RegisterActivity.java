@@ -69,9 +69,21 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
-                                sendusertoMainActivity();
-                                Toast.makeText(RegisterActivity.this,"Account Created Successfully",Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
+                                firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()) {
+                                            Toast.makeText(RegisterActivity.this, "Account Created Successfully,Please" +
+                                                    "Verify your email", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                        }
+                                        else
+                                        {
+                                            String Error=task.getException().getMessage();
+                                            Toast.makeText(RegisterActivity.this,Error,Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
                             else
                             {

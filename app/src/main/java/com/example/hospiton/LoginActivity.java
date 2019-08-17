@@ -140,8 +140,14 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
-                                Toast.makeText(LoginActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
-                                sendusertoMainActivity();
+                                if(firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                    Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                                    sendusertoMainActivity();
+                                }
+                                else
+                                {
+                                    Toast.makeText(LoginActivity.this,"Please Verify Your Email",Toast.LENGTH_SHORT).show();
+                                }
                                 progressDialog.dismiss();
                             }
                             else

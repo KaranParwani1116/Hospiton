@@ -86,5 +86,11 @@ public class MainActivity extends AppCompatActivity {
             LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(LoginActivityIntent);
         }
+        if(!firebaseAuth.getCurrentUser().isEmailVerified())
+        {
+            Intent LoginActivityIntent=new Intent(MainActivity.this, LoginActivity.class);
+            LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(LoginActivityIntent);
+        }
     }
 }
