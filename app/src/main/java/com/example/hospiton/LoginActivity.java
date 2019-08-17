@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView forgetPassword,NeednewAccount;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
-    public static GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInClient mGoogleSignInClient;
     private SignInButton signInButton;
     private static final String TAG=LoginActivity.class.getSimpleName();
     @Override
