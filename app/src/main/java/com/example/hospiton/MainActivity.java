@@ -82,19 +82,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-           try {
-               if (firebaseUser == null) {
-                   Intent LoginActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
-                   LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                   startActivity(LoginActivityIntent);
-               } else if (!(firebaseAuth.getCurrentUser().isEmailVerified())) {
-                   Intent LoginActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
-                   LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                   startActivity(LoginActivityIntent);
-               }
-           }catch (NullPointerException e)
+           if(firebaseAuth.getCurrentUser()!=null)
            {
+              if(firebaseAuth.getCurrentUser().isEmailVerified())
+              {
 
+              }
+           }
+           else
+           {
+               Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+               startActivity(intent);
            }
     }
 }
