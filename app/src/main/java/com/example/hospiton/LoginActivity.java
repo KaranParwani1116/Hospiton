@@ -29,10 +29,13 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.w3c.dom.Text;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText Email,Password;
-    private Button LoginButton;
+    private Button LoginButton,PhoneVerification;
     private TextView forgetPassword,NeednewAccount;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
@@ -128,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     Toast.makeText(LoginActivity.this,"Please Fill All the details",Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else if(isValidPassword(password)){
                     progressDialog.setTitle("Signing In");
                     progressDialog.setMessage("Please Wait");
                     progressDialog.setCanceledOnTouchOutside(true);
@@ -159,6 +162,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
                 }
+                else
+                {
+                    Toast.makeText(LoginActivity.this,"Password Must Contain One Capital Letter" +
+                            ", One Symbol, One Number",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -168,6 +176,25 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
             }
         });
+
+        PhoneVerification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent=new Intent(LoginActivity.this,Phone_Login.class);
+               startActivity(intent);
+               overridePendingTransition(R.anim.right_slide_out,R.anim.slideoutleft);
+            }
+        });
+    }
+
+    private boolean isValidPassword(String password) {
+        Pattern pattern;
+        Matcher matcher;
+
+        final String Password_Pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
+        pattern=Pattern.compile(Password_Pattern);
+        matcher=pattern.matcher(password);
+        return matcher.matches();
     }
 
     private void sendusertoMainActivity()
@@ -184,5 +211,6 @@ public class LoginActivity extends AppCompatActivity {
         NeednewAccount=(TextView)findViewById(R.id.Need_New_account_text_view);
         progressDialog=new ProgressDialog(this);
         signInButton=(SignInButton)findViewById(R.id.googlesignin);
+        PhoneVerification=(Button)findViewById(R.id.phone_verify);
     }
 }

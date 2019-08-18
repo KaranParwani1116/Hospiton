@@ -17,6 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText Email,Password;
@@ -57,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     Toast.makeText(RegisterActivity.this,"Please Fill All The Above Details",Toast.LENGTH_SHORT).show();
                 }
-                else
+                else if(isValidPassword(password))
                 {
                     progressDialog.setTitle("Creating New Account");
                     progressDialog.setMessage("Please Wait,While We are Creating New Account For You.....");
@@ -95,8 +98,23 @@ public class RegisterActivity extends AppCompatActivity {
                     });
 
                 }
+                else
+                {
+                    Toast.makeText(RegisterActivity.this,"Password Must Contain One Capital Letter" +
+                            ", One Symbol, One Number",Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private boolean isValidPassword(String password) {
+        Pattern pattern;
+        Matcher matcher;
+
+        final String Password_Pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
+        pattern=Pattern.compile(Password_Pattern);
+        matcher=pattern.matcher(password);
+        return matcher.matches();
     }
 
     private void sendusertoMainActivity()

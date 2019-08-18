@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Phone_Login"
+    android:background="@color/colorPrimary">
+
+    <include
+        layout="@layout/custom_toolbar"
+        android:id="@+id/phone_login_toolbar">
+    </include>
+
+    <TextView
+        android:id="@+id/text_hospiton_phone"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/customtoolbar"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="54dp"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/phone_text"
+        android:layout_below="@+id/text_hospiton_phone"
+        android:background="@drawable/edittext"
+        android:drawableLeft="@drawable/ic_phone_black_24dp"
+        android:hint="Enter Your Indian Phone Number"
+        android:layout_marginTop="70dp"
+        android:textColor="#FFFFFF"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:inputType="phone"
+        android:maxLength="10"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/loginbutton"
+        android:layout_below="@+id/phone_text"
+        android:layout_centerHorizontal="true"
+        android:text="Continue"
+        android:textColor="#FFF"
+        android:textSize="20sp"
+        android:padding="17dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/continue_button"/>
+
+</RelativeLayout>

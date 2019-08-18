@@ -74,13 +74,24 @@
                 android:layout_centerInParent="true"
                 android:textSize="20sp"/>
 
+
             <com.google.android.gms.common.SignInButton
+                android:layout_marginLeft="25dp"
                 android:id="@+id/googlesignin"
-                android:layout_width="wrap_content"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/signinusing"
-                android:layout_centerInParent="true">
+                android:layout_below="@id/signinusing">
             </com.google.android.gms.common.SignInButton>
+
+           <Button
+               android:id="@+id/phone_verify"
+               android:layout_width="170dp"
+               android:layout_below="@+id/signinusing"
+               android:layout_height="wrap_content"
+               android:background="@drawable/loginbutton"
+               android:layout_toRightOf="@+id/googlesignin"
+               android:text="Phone"
+               android:textColor="#FFF"/>
 
             <TextView
                 android:id="@+id/Need_New_account_text_view"

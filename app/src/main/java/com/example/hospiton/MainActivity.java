@@ -19,6 +19,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -80,17 +82,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(firebaseUser==null)
-        {
-            Intent LoginActivityIntent=new Intent(MainActivity.this, LoginActivity.class);
-            LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(LoginActivityIntent);
-        }
-        if(!firebaseAuth.getCurrentUser().isEmailVerified())
-        {
-            Intent LoginActivityIntent=new Intent(MainActivity.this, LoginActivity.class);
-            LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(LoginActivityIntent);
-        }
+           try {
+               if (firebaseUser == null) {
+                   Intent LoginActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
+                   LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                   startActivity(LoginActivityIntent);
+               } else if (!(firebaseAuth.getCurrentUser().isEmailVerified())) {
+                   Intent LoginActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
+                   LoginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                   startActivity(LoginActivityIntent);
+               }
+           }catch (NullPointerException e)
+           {
+
+           }
     }
 }
