@@ -18,9 +18,6 @@ public class Phone_Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone__login);
-        Toolbar toolbar=(Toolbar)findViewById(R.id.phone_login_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Login Using Phone");
 
 
         initializeviews();

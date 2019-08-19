@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Hospiton</string>
-    <string name="hintemail">Enter Your Emai</string>
-    <string name="hintpassword">Enter Your Password</string>
-    <string name="loginbutton">Login</string>
+    <string name="hintemail">Email</string>
+    <string name="hintpassword">Password</string>
+    <string name="loginbutton">Sign In</string>
     <string name="forgetPassword">Forget Password?</string>
     <string name="neednewaccount">Need new Account ?</string>
-    <string name="AccountCreatd">Already Have Acoount?</string>
+    <string name="AccountCreatd">Already Have Account?</string>
     <string name="Welcome">Welcome to Hospiton</string>
 </resources>

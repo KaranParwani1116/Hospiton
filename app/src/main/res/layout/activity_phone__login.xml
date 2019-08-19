@@ -5,23 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Phone_Login"
-    android:background="@color/colorPrimary">
-
-    <include
-        layout="@layout/custom_toolbar"
-        android:id="@+id/phone_login_toolbar">
-    </include>
+    android:background="@drawable/kp">
 
     <TextView
         android:id="@+id/text_hospiton_phone"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/customtoolbar"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="54dp"
+        android:textSize="60sp"
+        android:fontFamily="cursive"
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"/>
+        android:layout_marginTop="20dp"/>
 
 
     <EditText
@@ -29,15 +24,16 @@
         android:layout_height="60dp"
         android:id="@+id/phone_text"
         android:layout_below="@+id/text_hospiton_phone"
-        android:background="@drawable/edittext"
+        android:backgroundTint="#000000"
         android:drawableLeft="@drawable/ic_phone_black_24dp"
-        android:hint="Enter Your Indian Phone Number"
-        android:layout_marginTop="70dp"
-        android:textColor="#FFFFFF"
+        android:hint="Enter Your Number"
+        android:layout_marginTop="190dp"
+        android:textColor="#000000"
         android:paddingLeft="17dp"
         android:paddingRight="17dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
+        android:paddingTop="6dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:inputType="phone"
         android:maxLength="10"/>
 

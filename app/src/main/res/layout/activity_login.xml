@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/karan">
 
 
 
@@ -14,25 +15,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:textSize="54dp"
+                android:textSize="60sp"
+                android:fontFamily="cursive"
                 android:textColor="#FFFFFF"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="70dp"/>
+                android:layout_marginTop="20dp"/>
+
 
             <EditText
+                android:drawableLeft="@drawable/email"
                 android:id="@+id/login_email_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_hospiton"
                 android:hint="@string/hintemail"
                 android:inputType="textEmailAddress"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/edittext"
-                android:padding="6dp"
-                android:drawableLeft="@drawable/email"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"/>
+                android:layout_marginTop="150dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"/>
 
             <EditText
                 android:id="@+id/login_password_view"
@@ -41,13 +41,11 @@
                 android:layout_below="@+id/login_email_view"
                 android:hint="@string/hintpassword"
                 android:inputType="textPassword"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/edittext"
                 android:padding="6dp"
                 android:drawableLeft="@drawable/password"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"/>
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"/>
 
             <Button
                 android:id="@+id/login_button_view"
@@ -57,9 +55,10 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/loginbutton"
                 android:textSize="24sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"
+                android:textStyle="normal"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
                 android:text="@string/loginbutton"
                 android:textColor="@android:color/background_light"/>
             <TextView
@@ -69,28 +68,30 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_button_view"
                 android:text="or Sign in using"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textStyle="normal"
                 android:layout_centerInParent="true"
                 android:textSize="20sp"/>
 
 
             <com.google.android.gms.common.SignInButton
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="120dp"
                 android:id="@+id/googlesignin"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_below="@id/signinusing">
             </com.google.android.gms.common.SignInButton>
 
            <Button
                android:id="@+id/phone_verify"
-               android:layout_width="170dp"
+               android:layout_width="100dp"
                android:layout_below="@+id/signinusing"
-               android:layout_height="wrap_content"
+               android:layout_height="50dp"
                android:background="@drawable/loginbutton"
                android:layout_toRightOf="@+id/googlesignin"
                android:text="Phone"
+               android:layout_marginRight="30dp"
+               android:layout_marginLeft="10dp"
                android:textColor="#FFF"/>
 
             <TextView
@@ -99,22 +100,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/neednewaccount"
                 android:layout_below="@+id/googlesignin"
-                android:textStyle="bold"
+                android:textStyle="normal"
                 android:layout_marginRight="23dp"
                 android:layout_marginTop="10dp"
                 android:textSize="20sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@android:color/background_dark"
                 android:layout_centerHorizontal="true"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Created By Karan Parwani"
-                android:textColor="#FFFFFF"
-                android:layout_alignParentRight="true"
-                android:textSize="15sp"
-                android:layout_below="@id/Need_New_account_text_view"
-                android:layout_marginTop="50dp"/>
-
 
 </RelativeLayout>

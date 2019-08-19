@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Intent intent=new Intent(LoginActivity.this,MainActivity.class);
@@ -109,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+        progressDialog.dismiss();
     }
     private void onclicklistener() {
         NeednewAccount.setOnClickListener(new View.OnClickListener() {

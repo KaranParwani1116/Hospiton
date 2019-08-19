@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -30,13 +31,11 @@ public class Verify extends AppCompatActivity {
     private EditText OTP;
     private Button verify;
     private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
-        Toolbar toolbar=(Toolbar)findViewById(R.id.phone_verify_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Verify Your Number");
         mAuth=FirebaseAuth.getInstance();
 
         initializeviews();
@@ -47,12 +46,16 @@ public class Verify extends AppCompatActivity {
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
               String Code=OTP.getText().toString().trim();
               if(TextUtils.isEmpty(Code))
               {
                   Toast.makeText(Verify.this,"Please Enter The Code",Toast.LENGTH_LONG).show();
               }
-              verifycode(Code);
+              else {
+                  progressBar.setVisibility(View.VISIBLE);
+                  verifycode(Code);
+              }
             }
         });
     }
@@ -70,9 +73,11 @@ public class Verify extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                       if(task.isSuccessful())
                       {
+                           progressBar.setVisibility(View.INVISIBLE);
                           Intent intent=new Intent(Verify.this,MainActivity.class);
                           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                           startActivity(intent);
+                          Toast.makeText(Verify.this,"Welcome",Toast.LENGTH_SHORT).show();
                       }
                       else
                       {
@@ -85,6 +90,7 @@ public class Verify extends AppCompatActivity {
     private void initializeviews() {
        OTP=(EditText)findViewById(R.id.OTP_text);
        verify=(Button)findViewById(R.id.verify_button);
+       progressBar=(ProgressBar)findViewById(R.id.verify_progress_bar);
     }
 
     private void sendVerificationCode(String number){
@@ -99,6 +105,7 @@ public class Verify extends AppCompatActivity {
            if(code!=null)
            {
                OTP.setText(code);
+               progressBar.setVisibility(View.VISIBLE);
                verifycode(code);
            }
         }
