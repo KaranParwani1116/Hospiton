@@ -7,4 +7,14 @@
     <string name="neednewaccount">Need new Account ?</string>
     <string name="AccountCreatd">Already Have Account?</string>
     <string name="Welcome">Welcome to Hospiton</string>
+
+
+    <!-- user profile detalis -->
+
+    <string name="namehint">Name</string>
+    <string name="user_phone_hint">Your Contact Number</string>
+    <string name="numberofclosedones1">Contact of Closed One 1</string>
+    <string name="numberofclosedones2">Contact of Closed One 2</string>
+    <string name="numberofclosedones3">Contact of Closed One 3</string>
+    <string name="button_save">Save</string>
 </resources>

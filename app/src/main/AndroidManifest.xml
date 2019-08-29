@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Verify"></activity>
+        <activity android:name=".User_Profile"></activity>
+        <activity android:name=".Verify" />
         <activity android:name=".Phone_Login" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
