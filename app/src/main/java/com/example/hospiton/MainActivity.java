@@ -8,6 +8,8 @@ import android.util.Log;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -22,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+    private Button button;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private Toolbar toolbar;
@@ -45,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+
+        button=(Button)findViewById(R.id.go_to_profile);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,User_Profile.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
