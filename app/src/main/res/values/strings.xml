@@ -17,4 +17,10 @@
     <string name="numberofclosedones2">Contact of Closed One 2</string>
     <string name="numberofclosedones3">Contact of Closed One 3</string>
     <string name="button_save">Save</string>
+
+
+    <!--Firebase RealTime Database-->
+    <string name="Users">Users</string>
+    <string name="name">name</string>
+
 </resources>

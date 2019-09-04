@@ -1,11 +1,11 @@
 package com.example.hospiton;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +20,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     private Button button;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private Toolbar toolbar;
+    private DatabaseReference Rootref;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
+        Rootref=FirebaseDatabase.getInstance().getReference();
 
         toolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //Taking Root Reference of database
+        Rootref= FirebaseDatabase.getInstance().getReference();
 
     }
 
@@ -98,7 +106,13 @@ public class MainActivity extends AppCompatActivity {
            {
               if(firebaseAuth.getCurrentUser().isEmailVerified())
               {
-
+                 verifyexistence();
+              }
+              else
+              {
+                  Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                  startActivity(intent);
               }
            }
            else
@@ -107,5 +121,32 @@ public class MainActivity extends AppCompatActivity {
                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                startActivity(intent);
            }
+
+
+    }
+
+    private void verifyexistence() {
+       String userid=firebaseAuth.getCurrentUser().getUid();
+       Rootref.child(getString(R.string.Users)).child(userid).addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               if(dataSnapshot.child(getString(R.string.name)).exists())
+               {
+                 Toast.makeText(MainActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
+               }
+               else
+               {
+                   Intent intent=new Intent(MainActivity.this,User_Profile.class);
+                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                   startActivity(intent);
+                   finish();
+               }
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
     }
 }

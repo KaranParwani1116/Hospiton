@@ -1,9 +1,11 @@
 package com.example.hospiton;
 
 import android.content.Context;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,18 @@ import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
     private List<androidcontacts>contacts;
+    final private ListItemClickListener listItemClickListener;
 
 
-    public ContactsAdapter(List<androidcontacts>contacts)
+    public interface ListItemClickListener
     {
+        void onListItemClicked(int Position);
+    }
+
+
+    public ContactsAdapter(List<androidcontacts>contacts,ListItemClickListener listItemClickListener)
+    {
+        this.listItemClickListener=listItemClickListener;
         this.contacts=contacts;
     }
 
@@ -45,18 +55,31 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
        notifyDataSetChanged();
     }
 
+    public androidcontacts getitem(int Position)
+    {
+        return contacts.get(Position);
+    }
+
     @Override
     public int getItemCount() {
         return contacts.size();
     }
 
-    public class ContactsViewHolder extends RecyclerView.ViewHolder {
+    public class ContactsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;
         TextView usercontacts;
         public ContactsViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView=(ImageView)itemView.findViewById(R.id.phone_logo);
             usercontacts=(TextView)itemView.findViewById(R.id.contacts);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d("Contacts Adapter","On click invoked");
+            int position=getAdapterPosition();
+            listItemClickListener.onListItemClicked(position);
         }
     }
 }
