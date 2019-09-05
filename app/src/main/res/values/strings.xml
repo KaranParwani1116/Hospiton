@@ -22,5 +22,11 @@
     <!--Firebase RealTime Database-->
     <string name="Users">Users</string>
     <string name="name">name</string>
+    <string name="contact">User Contact number</string>
+    <string name="alias_contact1">alias contact 1</string>
+    <string name="alias_contact2">alias contact 2</string>
+    <string name="alias_contact3">alias contact 3</string>
+    <string name="DownloadableUrl">Downloadable Url</string>
+    <string name="ProfileImages">Profile Images</string>
 
 </resources>

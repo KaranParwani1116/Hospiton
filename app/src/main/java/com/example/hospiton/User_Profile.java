@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.DocumentsContract;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +30,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class User_Profile extends AppCompatActivity implements View.OnClickListener, ContactsAdapter.ListItemClickListener
@@ -47,11 +65,19 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
     private ContactsAdapter contactsAdapter;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 102;
     private static final int GalleryPicker=123;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference Rootref;
+    private StorageReference mstorageref;
+    private String Download_Url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user__profile);
+
+        firebaseAuth=FirebaseAuth.getInstance();
+        Rootref= FirebaseDatabase.getInstance().getReference();
+        mstorageref= FirebaseStorage.getInstance().getReference().child(getString(R.string.ProfileImages));
 
         Initializeviews();
         setOnClickListener();
@@ -82,6 +108,34 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
         } else {
             // Permission has already been granted
         }
+
+        FetchData();
+    }
+
+    private void FetchData() {
+        String CurrentUserId=firebaseAuth.getCurrentUser().getUid();
+        Rootref.child(getString(R.string.Users)).child(CurrentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(getString(R.string.DownloadableUrl)).exists())
+                {
+                    Picasso.get().load(dataSnapshot.child(getString(R.string.DownloadableUrl)).getValue().toString()).fit().into(userphoto);
+                }
+                if(dataSnapshot.exists() && dataSnapshot.child(getString(R.string.name)).exists())
+                {
+                    user_name.setText(dataSnapshot.child(getString(R.string.name)).getValue().toString());
+                    user_contact.setText(dataSnapshot.child(getString(R.string.contact)).getValue().toString());
+                    closed_contact1.setText(dataSnapshot.child(getString(R.string.alias_contact1)).getValue().toString());
+                    closed_contact2.setText(dataSnapshot.child(getString(R.string.alias_contact2)).getValue().toString());
+                    closed_contact3.setText(dataSnapshot.child(getString(R.string.alias_contact3)).getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -144,6 +198,25 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if(resultCode == RESULT_OK)
+            {
+                Uri resultUri=result.getUri();
+
+                 final StorageReference Filepath=mstorageref.child(firebaseAuth.getCurrentUser().getUid() + ".jpeg");
+                 Filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                     @Override
+                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                         Filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                             @Override
+                             public void onSuccess(Uri uri) {
+                                 Download_Url=uri.toString();
+                                 Picasso.get().load(Download_Url).fit().into(userphoto);
+                             }
+                         });
+                     }
+                 });
+            }
         }
     }
 
@@ -216,8 +289,60 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
             case R.id.user_profile_image:
                 gotogallery();
                 break;
+
+            case R.id.save_button:
+                validateform();
+                break;
         }
     }
+
+    private void validateform() {
+        String name=user_name.getText().toString();
+        String Contact=user_contact.getText().toString();
+        String closed_contact_1=closed_contact1.getText().toString();
+        String closed_contact_2=closed_contact2.getText().toString();
+        String closed_contact_3=closed_contact3.getText().toString();
+
+        if(TextUtils.isEmpty(name) || TextUtils.isEmpty(Contact) || TextUtils.isEmpty(closed_contact_1) || TextUtils.isEmpty(closed_contact_2)
+          || TextUtils.isEmpty(closed_contact_3))
+        {
+            Toast.makeText(User_Profile.this,"Please Fill all the details above", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            String currentuserid=firebaseAuth.getCurrentUser().getUid();
+            HashMap<String,String>Data=new HashMap<>();
+            Data.put(getResources().getString(R.string.name),name);
+            Data.put(getString(R.string.contact),Contact);
+            Data.put(getString(R.string.alias_contact1),closed_contact_1);
+            Data.put(getString(R.string.alias_contact2),closed_contact_2);
+            Data.put(getString(R.string.alias_contact3),closed_contact_3);
+            Data.put(getString(R.string.DownloadableUrl),Download_Url);
+
+            Rootref.child(getString(R.string.Users)).child(currentuserid).setValue(Data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        SendUserToMainActivity();
+
+                    }
+                    else {
+                        String Error=task.getException().getMessage().toString();
+                        Toast.makeText(User_Profile.this,Error,Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void SendUserToMainActivity() {
+        Intent intent=new Intent(User_Profile.this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 
     @Override
     public void onListItemClicked(int Position) {

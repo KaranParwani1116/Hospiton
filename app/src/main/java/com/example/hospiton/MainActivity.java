@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -110,9 +112,14 @@ public class MainActivity extends AppCompatActivity {
               }
               else
               {
-                  Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                  startActivity(intent);
+                  if(firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                      Log.d("TAG", "Else invoked");
+                      Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                      startActivity(intent);
+                  }else {
+                        verifyexistence();
+                  }
               }
            }
            else
