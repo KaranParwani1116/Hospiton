@@ -119,7 +119,8 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(getString(R.string.DownloadableUrl)).exists())
                 {
-                    Picasso.get().load(dataSnapshot.child(getString(R.string.DownloadableUrl)).getValue().toString()).fit().into(userphoto);
+                    Download_Url=dataSnapshot.child(getString(R.string.DownloadableUrl)).getValue().toString();
+                    Picasso.get().load(Download_Url).fit().into(userphoto);
                 }
                 if(dataSnapshot.exists() && dataSnapshot.child(getString(R.string.name)).exists())
                 {
