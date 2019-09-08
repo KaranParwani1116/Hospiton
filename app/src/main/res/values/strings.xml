@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hospiton</string>
+    <string name="app_name">Emergency</string>
     <string name="hintemail">Email</string>
     <string name="hintpassword">Password</string>
     <string name="loginbutton">Sign In</string>
@@ -28,5 +28,10 @@
     <string name="alias_contact3">alias contact 3</string>
     <string name="DownloadableUrl">Downloadable Url</string>
     <string name="ProfileImages">Profile Images</string>
+
+
+    <!--MainActivity-->
+
+    <string name="PanicButton">SOS</string>
 
 </resources>

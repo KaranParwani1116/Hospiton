@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fc354c</color>
+    <color name="colorPrimary">#Dc143c</color>
     <color name="PrimaryDark">#E47171</color>
     <color name="colorAccent">#CA2323</color>
     <color name="pdark">#000000</color>
     <color name="grd">#CA2323</color>
+    <color name="circle1">#7CDC143C</color>
+    <color name="circle2">#4DDC143C</color>
 </resources>

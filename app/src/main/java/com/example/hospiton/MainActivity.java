@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    private Button button;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private Toolbar toolbar;
@@ -56,14 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
-        button=(Button)findViewById(R.id.go_to_profile);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,User_Profile.class);
-                startActivity(intent);
-            }
-        });
 
         //Taking Root Reference of database
         Rootref= FirebaseDatabase.getInstance().getReference();
