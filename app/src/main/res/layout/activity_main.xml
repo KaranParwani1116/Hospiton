@@ -12,11 +12,38 @@
     </include>
 
 
-  <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:text="Go to User Profile"
-      android:id="@+id/go_to_profile"/>
+   <TextView
+       android:layout_width="170dp"
+       android:layout_height="170dp"
+       android:layout_centerInParent="true"
+       android:fontFamily="sans-serif-medium"
+       android:textSize="60sp"
+       android:text="@string/PanicButton"
+       android:gravity="center"
+       android:textColor="#FFFFFF"
+       android:background="@drawable/circle"/>
+
+    <TextView
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="60sp"
+        android:text="@string/PanicButton"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle1"/>
+
+
+    <TextView
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="60sp"
+        android:text="@string/PanicButton"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle2"/>
 
 </RelativeLayout>
