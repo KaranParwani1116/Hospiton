@@ -5,7 +5,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+
 import androidx.appcompat.widget.Toolbar;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DatabaseReference Rootref;
     private GoogleSignInClient mGoogleSignInClient;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,52 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
         Rootref=FirebaseDatabase.getInstance().getReference();
+
+        drawerLayout=findViewById(R.id.drawer_layout);
+        navigationView=findViewById(R.id.navigation_view);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId())
+                {
+                    case R.id.item1:
+                        menuItem.setChecked(true);
+                        //displayMessage("item 1");
+                        Intent intent=new Intent(MainActivity.this,Phone_Login.class);
+                        startActivity(intent);
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.item2:
+                        menuItem.setChecked(true);
+                        //displayMessage("Item 2");
+                        Intent intent2=new Intent(MainActivity.this,Phone_Login.class);
+                        startActivity(intent2);
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.item3:
+                        menuItem.setChecked(true);
+                        //displayMessage("Item 2");
+                        Intent intent3=new Intent(MainActivity.this,Phone_Login.class);
+                        startActivity(intent3);
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                    case R.id.item4:
+                        menuItem.setChecked(true);
+                        //displayMessage("Item 2");
+                        Intent intent4=new Intent(MainActivity.this,Phone_Login.class);
+                        startActivity(intent4);
+                        drawerLayout.closeDrawers();
+                        return true;
+
+                }
+                return false;
+            }
+        });
 
         toolbar=(Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(toolbar);
@@ -67,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Taking Root Reference of database
         Rootref= FirebaseDatabase.getInstance().getReference();
+
+
 
     }
 

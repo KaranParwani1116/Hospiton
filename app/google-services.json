@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1030735483120-m7b4dphrceus45bp59gimjvr7aoicmhj.apps.googleusercontent.com",
+          "client_id": "1030735483120-2pn4lpj5iur7r93m2d1pn29opu63cuim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hospiton",
+            "certificate_hash": "9db4b452178c1bba443f243784ab04155a600480"
+          }
+        },
+        {
+          "client_id": "1030735483120-4e01h8qh9dvj5f6cvs531p949i2bd87a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.hospiton",
