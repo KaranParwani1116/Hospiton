@@ -60,7 +60,7 @@
         android:layout_gravity="start"
         app:menu="@menu/menu"
         app:itemIconTint="#F70C0C"
-        android:background="#F1FFFF">
+        android:background="#000">
 
     </com.google.android.material.navigation.NavigationView>
 

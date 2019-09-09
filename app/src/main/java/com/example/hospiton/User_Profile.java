@@ -305,7 +305,7 @@ public class User_Profile extends AppCompatActivity implements View.OnClickListe
         String closed_contact_3=closed_contact3.getText().toString();
 
         if(TextUtils.isEmpty(name) || TextUtils.isEmpty(Contact) || TextUtils.isEmpty(closed_contact_1) || TextUtils.isEmpty(closed_contact_2)
-          || TextUtils.isEmpty(closed_contact_3))
+          || TextUtils.isEmpty(closed_contact_3) && Download_Url!=null)
         {
             Toast.makeText(User_Profile.this,"Please Fill all the details above", Toast.LENGTH_SHORT).show();
         }

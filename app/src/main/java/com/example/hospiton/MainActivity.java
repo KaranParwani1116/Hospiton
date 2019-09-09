@@ -144,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
           startActivity(intent);
 
         }
+        else if(id==R.id.profile)
+        {
+            Intent intent=new Intent(MainActivity.this,User_Profile.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
