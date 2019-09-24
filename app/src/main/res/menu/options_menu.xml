@@ -7,6 +7,11 @@
         app:showAsAction="never">
     </item>
 
+    <item android:id="@+id/destination"
+        android:title="Select Destination"
+        app:showAsAction="never">
+    </item>
+
     <item android:id="@+id/signout"
         android:title="SignOut"
         app:showAsAction="never">

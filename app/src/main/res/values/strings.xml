@@ -34,4 +34,8 @@
 
     <string name="PanicButton">SOS</string>
 
+    <!--Places API KEY-->
+
+    <string name="places_api_key">AIzaSyCOtEIuYgncytKRSVBmewS8AIzsMLgNpHg</string>
+
 </resources>

@@ -64,32 +64,24 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.item1:
                         menuItem.setChecked(true);
                         //displayMessage("item 1");
-                        Intent intent=new Intent(MainActivity.this,Phone_Login.class);
-                        startActivity(intent);
                         drawerLayout.closeDrawers();
                         return true;
 
                     case R.id.item2:
                         menuItem.setChecked(true);
                         //displayMessage("Item 2");
-                        Intent intent2=new Intent(MainActivity.this,Phone_Login.class);
-                        startActivity(intent2);
                         drawerLayout.closeDrawers();
                         return true;
 
                     case R.id.item3:
                         menuItem.setChecked(true);
                         //displayMessage("Item 2");
-                        Intent intent3=new Intent(MainActivity.this,Phone_Login.class);
-                        startActivity(intent3);
                         drawerLayout.closeDrawers();
                         return true;
 
                     case R.id.item4:
                         menuItem.setChecked(true);
                         //displayMessage("Item 2");
-                        Intent intent4=new Intent(MainActivity.this,Phone_Login.class);
-                        startActivity(intent4);
                         drawerLayout.closeDrawers();
                         return true;
 
@@ -147,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
         else if(id==R.id.profile)
         {
             Intent intent=new Intent(MainActivity.this,User_Profile.class);
+            startActivity(intent);
+        }
+        else if(id==R.id.destination)
+        {
+            Intent intent=new Intent(MainActivity.this,Destination.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
