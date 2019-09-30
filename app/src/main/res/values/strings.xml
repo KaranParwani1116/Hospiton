@@ -28,14 +28,22 @@
     <string name="alias_contact3">alias contact 3</string>
     <string name="DownloadableUrl">Downloadable Url</string>
     <string name="ProfileImages">Profile Images</string>
+    <string name="place_node">Places</string>
+    <string name="User_Current">Current</string>
+    <string name="User_Destination">Destination</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="going_time">Date</string>
 
 
     <!--MainActivity-->
 
     <string name="PanicButton">SOS</string>
+    <string name="set_destination">Set Destination</string>
 
     <!--Places API KEY-->
 
     <string name="places_api_key">AIzaSyCOtEIuYgncytKRSVBmewS8AIzsMLgNpHg</string>
+    <string name="drivingtext">Search Destination Above</string>
 
 </resources>

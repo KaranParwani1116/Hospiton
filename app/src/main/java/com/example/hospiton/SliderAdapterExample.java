@@ -16,7 +16,7 @@ import java.util.List;
 public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample.SliderAdapterVH> {
 
     private List<Uri>ImageUri;
-    private int count=0;
+    private int count=1;
 
 
     @Override
@@ -27,10 +27,11 @@ public class SliderAdapterExample extends SliderViewAdapter<SliderAdapterExample
 
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
+        Uri uri=null;
 
         if (ImageUri != null)
         {
-            Uri uri=ImageUri.get(position);
+            uri=ImageUri.get(position);
             Picasso.get().load(uri).fit().into(viewHolder.imageViewBackground);
         }
     }

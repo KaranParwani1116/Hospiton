@@ -2,6 +2,7 @@ package com.example.hospiton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,12 +11,15 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -36,6 +40,9 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -47,31 +54,58 @@ import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class Destination extends AppCompatActivity {
     PlacesClient placesClient;
-    List<Place.Field> placefields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING);
+    private CardView cardView;
+    private ImageView placeholder,Results;
+    private TextView searchtext;
+    List<Place.Field> placefields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.RATING,Place.Field.LAT_LNG);
     AutocompleteSupportFragment places_fragment;
     private String place_id="";
-    private ImageView placephoto;
     List<PhotoMetadata>allphotos;
-    private Button Find;
+    private Button Find,setDestination;
     private SliderView sliderView;
     private List<Uri>ImageUri;
     private SliderAdapterExample adapter;
+    private String Desyination_id="";
+    private Button CheckPlace;
     private String TAG=Destination.class.getSimpleName();
+    private FirebaseAuth mAuth;
+    private DatabaseReference usersref;
+    private String current_address;
+    private String destination_address;
+    private double latitude;
+    private double longitude;
+    private Latitude checklatitude;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination);
+        cardView=(CardView)findViewById(R.id.card);
+        placeholder=(ImageView)findViewById(R.id.driving_car);
+        searchtext=(TextView)findViewById(R.id.search_text_view);
+        CheckPlace=(Button)findViewById(R.id.check_place);
+        Results=(ImageView)findViewById(R.id.display_result);
+        progressBar=(ProgressBar)findViewById(R.id.checking_bar);
+        setDestination=(Button)findViewById(R.id.set_destination);
+        mAuth=FirebaseAuth.getInstance();
+        usersref= FirebaseDatabase.getInstance().getReference();
+
 
         ImageUri=new ArrayList<>();
         requestpermission();
@@ -93,10 +127,88 @@ public class Destination extends AppCompatActivity {
         sliderView.setIndicatorUnselectedColor(Color.GRAY);
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
+        checklatitude=new Latitude();
+
+        setonclicklistener();
 
     }
 
-    private void getPhotoandDetail(String place_id) {
+    public void setonclicklistener()
+    {
+        CheckPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               CheckPlace.setVisibility(View.INVISIBLE);
+               progressBar.setVisibility(View.VISIBLE);
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                      int result= checklatitude.checkDim(latitude,longitude);
+                       progressBar.setVisibility(View.INVISIBLE);
+                       Results.setVisibility(View.VISIBLE);
+                       setDestination.setVisibility(View.VISIBLE);
+                       if(result==1)
+                       {
+                           Results.setImageDrawable(getResources().getDrawable(getResources().getIdentifier("@drawable/thumbsdown",null
+                                   ,getPackageName())));
+                       }
+                       else
+                       {
+                           Results.setImageDrawable(getResources().getDrawable(getResources().getIdentifier("@drawable/thumbsup",null
+                                   ,getPackageName())));
+                       }
+                   }
+               },5000);
+            }
+        });
+
+        setDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.User_Current)).setValue(current_address).addOnCompleteListener(new OnCompleteListener<Void>() {
+                   @Override
+                   public void onComplete(@NonNull Task<Void> task) {
+
+                   }
+               });
+
+                usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.User_Destination)).setValue(destination_address).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+                usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.latitude)).setValue(String.valueOf(latitude)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+                usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.longitude)).setValue(String.valueOf(longitude)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+
+                Calendar calendar=Calendar.getInstance();
+                SimpleDateFormat currentDateTimeFormat=new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                String CurrentDate=currentDateTimeFormat.format(calendar.getTime());
+
+
+                usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.going_time)).setValue(CurrentDate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+
+            }
+        });
+    }
+
+
+    private void getPhotoandDetail(final String place_id) {
         FetchPlaceRequest request=FetchPlaceRequest.builder(place_id,Arrays.asList(Place.Field.PHOTO_METADATAS)).build();
          placesClient.fetchPlace(request).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
              @Override
@@ -104,7 +216,6 @@ public class Destination extends AppCompatActivity {
                  Place place = fetchPlaceResponse.getPlace();
 
                  allphotos = place.getPhotoMetadatas();
-                 Log.d(TAG, String.valueOf(allphotos.size()));
 
                   if(allphotos!=null) {
                       for (int i = 0; i < allphotos.size(); i++) {
@@ -123,14 +234,35 @@ public class Destination extends AppCompatActivity {
                               }
                           });
                       }
-                      adapter.datachanged(ImageUri);
-                      ImageUri.clear();
                   }
              }
          }).addOnFailureListener(new OnFailureListener() {
              @Override
              public void onFailure(@NonNull Exception e) {
                  Toast.makeText(Destination.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+             }
+         });
+
+
+        placeholder.setVisibility(View.INVISIBLE);
+        searchtext.setVisibility(View.INVISIBLE);
+        cardView.setVisibility(View.VISIBLE);
+        sliderView.setVisibility(View.VISIBLE);
+        adapter.datachanged(ImageUri);
+        ImageUri.clear();
+        CheckPlace.setVisibility(View.VISIBLE);
+
+         FetchPlaceRequest detailrequest=FetchPlaceRequest.builder(place_id,Arrays.asList(Place.Field.LAT_LNG)).build();
+
+         placesClient.fetchPlace(detailrequest).addOnCompleteListener(new OnCompleteListener<FetchPlaceResponse>() {
+             @Override
+             public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                 if(task.isSuccessful())
+                 {
+                     Place place=task.getResult().getPlace();
+                     latitude=place.getLatLng().latitude;
+                     longitude=place.getLatLng().longitude;
+                 }
              }
          });
     }
@@ -182,7 +314,7 @@ public class Destination extends AppCompatActivity {
                 Collections.reverse(response.getPlaceLikelihoods());
                 place_id=response.getPlaceLikelihoods().get(0).getPlace().getId();
 
-                Toast.makeText(Destination.this,response.getPlaceLikelihoods().get(0).getPlace().getAddress()+response.getPlaceLikelihoods().get(0).getPlace().getLatLng(),Toast.LENGTH_LONG).show();
+                current_address=response.getPlaceLikelihoods().get(0).getPlace().getAddress();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -203,6 +335,10 @@ public class Destination extends AppCompatActivity {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
                 Toast.makeText(Destination.this,""+place.getName(),Toast.LENGTH_SHORT).show();
+                Results.setVisibility(View.INVISIBLE);
+                setDestination.setVisibility(View.INVISIBLE);
+                Desyination_id=place.getId();
+                destination_address=place.getAddress();
                 getPhotoandDetail(place.getId());
 
             }
