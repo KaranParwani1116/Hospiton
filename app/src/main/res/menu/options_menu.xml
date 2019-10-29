@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/profile"
-        android:title="user profile"
+        android:title="Profile"
         app:showAsAction="never">
     </item>
 
     <item android:id="@+id/destination"
-        android:title="Select Destination"
+        android:title="Destination"
+        app:showAsAction="never">
+    </item>
+
+    <item android:id="@+id/Find_Friends"
+        android:title="Find Friends"
+        app:showAsAction="never">
+    </item>
+
+    <item android:id="@+id/camera"
+        android:title="Number plate"
         app:showAsAction="never">
     </item>
 

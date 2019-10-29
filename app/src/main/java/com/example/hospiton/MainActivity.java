@@ -146,6 +146,16 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,Destination.class);
             startActivity(intent);
         }
+        else if(id==R.id.Find_Friends)
+        {
+            Intent intent=new Intent(MainActivity.this,FriendsActivity.class);
+            startActivity(intent);
+        }
+        else if(id==R.id.camera)
+        {
+            Intent intent=new Intent(MainActivity.this,textrecog.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 

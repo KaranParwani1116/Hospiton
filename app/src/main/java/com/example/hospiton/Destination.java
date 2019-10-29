@@ -203,8 +203,11 @@ public class Destination extends AppCompatActivity {
                     }
                 });
 
+                finish();
+
             }
         });
+
     }
 
 
