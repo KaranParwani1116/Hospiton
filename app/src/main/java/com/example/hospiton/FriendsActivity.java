@@ -53,6 +53,17 @@ public class FriendsActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull FindFriendViewHolder findFriendViewHolder, final int i, @NonNull Contacts contacts) {
                 findFriendViewHolder.username.setText(contacts.getName());
                 Picasso.get().load(contacts.getImage()).placeholder(R.drawable.profile_image).fit().into(findFriendViewHolder.userprofilephoto);
+
+
+                findFriendViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String visit_user_id=getRef(i).getKey();
+                        Intent intent=new Intent(FriendsActivity.this,ProfileActivity.class);
+                        intent.putExtra("visit_user_id",visit_user_id);
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull
