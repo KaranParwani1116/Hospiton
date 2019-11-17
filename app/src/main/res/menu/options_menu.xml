@@ -17,6 +17,11 @@
         app:showAsAction="never">
     </item>
 
+    <item android:id="@+id/contacts"
+        android:title="Contacts"
+        app:showAsAction="never">
+    </item>
+
     <item android:id="@+id/camera"
         android:title="Number plate"
         app:showAsAction="never">

@@ -16,8 +16,12 @@
         android:id="@+id/main_page_toolbar">
     </include>
 
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/main_page_toolbar">
    <TextView
+       android:id="@+id/sos_button"
        android:layout_width="170dp"
        android:layout_height="170dp"
        android:layout_centerInParent="true"
@@ -50,6 +54,27 @@
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:background="@drawable/circle2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your safety is our priority"
+            android:layout_below="@+id/sos_button"
+            android:layout_marginTop="50dp"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/colorPrimary"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sos_button"
+        android:layout_centerInParent="true"
+        android:id="@+id/test"
+        android:text="test_button"/>
+</RelativeLayout>
 
     </RelativeLayout>
     <com.google.android.material.navigation.NavigationView

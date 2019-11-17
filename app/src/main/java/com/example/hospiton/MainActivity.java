@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -32,6 +40,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -41,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-
+    private Button Testbutton;
+    private RequestQueue requestQueue;
+    private String url_imp="https://fcm.googleapis.com/fcm/send";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
         Rootref=FirebaseDatabase.getInstance().getReference();
+        Testbutton=(Button)findViewById(R.id.test) ;
+
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+
+        requestQueue= Volley.newRequestQueue(this);
+
+        Testbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               sendnotification();
+            }
+        });
 
         drawerLayout=findViewById(R.id.drawer_layout);
         navigationView=findViewById(R.id.navigation_view);
@@ -109,6 +139,42 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void sendnotification() {
+        JSONObject mainobj=new JSONObject();
+        try {
+            mainobj.put("to","/topics/"+"news");
+            JSONObject notification=new JSONObject();
+            notification.put("title","any title");
+            notification.put("body","any body");
+            mainobj.put("notification",notification);
+
+            JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url_imp,
+                    mainobj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String,String> header=new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyDMYebxipz5x6KH_iSOe25G6TFz_O54FVo");
+                    return header;
+                }
+            };
+
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -154,6 +220,11 @@ public class MainActivity extends AppCompatActivity {
         else if(id==R.id.camera)
         {
             Intent intent=new Intent(MainActivity.this,textrecog.class);
+            startActivity(intent);
+        }
+        else if(id==R.id.contacts)
+        {
+            Intent intent=new Intent(MainActivity.this,Contacts_Fragment.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

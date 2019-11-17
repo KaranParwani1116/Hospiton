@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -101,12 +102,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             // Sign in success, update UI with the signed-in user's information
                             String userid = firebaseAuth.getCurrentUser().getUid();
+                            final String Devicetoken= FirebaseInstanceId.getInstance().getToken();
                             RootRef.child(getString(R.string.Users)).child(userid).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if(dataSnapshot.child(getString(R.string.name)).exists())
                                     {
-
+                                       RootRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).child("device_token").setValue(Devicetoken);
                                     }
                                     else {
                                         String id=firebaseAuth.getUid();
