@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -11,6 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,9 +28,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -31,8 +48,12 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView User_profile_image;
     private TextView Username,UserStatus;
     private Button SendRequest,Cancel;
-    private DatabaseReference Ref,ChatRequest,ContactsRef, NotificationsRef;
+    private RequestQueue requestQueue;
+    private String url_imp="https://fcm.googleapis.com/fcm/send";
+    private DatabaseReference Ref,ChatRequest,ContactsRef, NotificationsRef,userref;
     private FirebaseAuth mAuth;
+    private String username;
+    private  String url_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +66,14 @@ public class ProfileActivity extends AppCompatActivity {
         ChatRequest=FirebaseDatabase.getInstance().getReference().child("Chat Requests");
         ContactsRef=FirebaseDatabase.getInstance().getReference().child("Contacts");
         NotificationsRef=FirebaseDatabase.getInstance().getReference().child("Notifications");
+        userref=FirebaseDatabase.getInstance().getReference().child("Users");
+
+        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getCurrentUser().getUid());
+        
+        requestQueue= Volley.newRequestQueue(this);
 
         receiveruserid=getIntent().getExtras().get("visit_user_id").toString();
+        username=getIntent().getStringExtra("User_name");
 
         User_profile_image=(CircleImageView)findViewById(R.id.visit_profile_image);
         Username=(TextView)findViewById(R.id.visit_user_name);
@@ -55,6 +82,21 @@ public class ProfileActivity extends AppCompatActivity {
         Cancel=(Button)findViewById(R.id.decline_message_button);
 
         Current_State="new";
+
+        userref.child(sendUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("image"))
+                {
+                    url_image=dataSnapshot.child("image").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         RetreiveUserInfo();
     }
@@ -260,6 +302,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void SendChatRequest() {
+        sendnotification();
         ChatRequest.child(sendUserID).child(receiveruserid)
                 .child("request_type").setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -294,5 +337,42 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void sendnotification() {
+        JSONObject mainobj=new JSONObject();
+        try {
+            mainobj.put("to","/topics/"+receiveruserid);
+            JSONObject notification=new JSONObject();
+            notification.put("title","Friend Request");
+            notification.put("body","You have friend Request From "+username);
+            notification.put("icon",url_image);
+            mainobj.put("notification",notification);
+
+            JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url_imp,
+                    mainobj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String,String> header=new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyDMYebxipz5x6KH_iSOe25G6TFz_O54FVo");
+                    return header;
+                }
+            };
+
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

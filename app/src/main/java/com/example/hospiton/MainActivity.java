@@ -1,13 +1,18 @@
 package com.example.hospiton;
 
+import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 
 import androidx.appcompat.widget.Toolbar;
 
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -15,7 +20,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -57,30 +66,27 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private Button Testbutton;
-    private RequestQueue requestQueue;
-    private String url_imp="https://fcm.googleapis.com/fcm/send";
+    private TextView sos_text,message;
+    private Drawable d;
+    private Animation fade;
+
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
         Rootref=FirebaseDatabase.getInstance().getReference();
-        Testbutton=(Button)findViewById(R.id.test) ;
+        sos_text=(TextView)findViewById(R.id.sos_button);
+        d=getResources().getDrawable(R.drawable.circle3);
+        message=(TextView)findViewById(R.id.message);
+        fade= AnimationUtils.loadAnimation(this,R.anim.fade);
 
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-
-        requestQueue= Volley.newRequestQueue(this);
-
-        Testbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               sendnotification();
-            }
-        });
+        relativeLayout=(RelativeLayout)findViewById(R.id.main_back);
 
         drawerLayout=findViewById(R.id.drawer_layout);
         navigationView=findViewById(R.id.navigation_view);
@@ -136,44 +142,20 @@ public class MainActivity extends AppCompatActivity {
         Rootref= FirebaseDatabase.getInstance().getReference();
 
 
+        sos_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    sos_text.setBackground(d);
+                    sos_text.setTextColor(getResources().getColor(R.color.change_background));
+                    message.setTextColor(getResources().getColor(R.color.white));
+                    relativeLayout.setBackgroundColor(getResources().getColor(R.color.change_background));
+                    relativeLayout.startAnimation(fade);
+
+            }
+        });
 
     }
 
-    private void sendnotification() {
-        JSONObject mainobj=new JSONObject();
-        try {
-            mainobj.put("to","/topics/"+"news");
-            JSONObject notification=new JSONObject();
-            notification.put("title","any title");
-            notification.put("body","any body");
-            mainobj.put("notification",notification);
-
-            JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url_imp,
-                    mainobj, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            }){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String,String> header=new HashMap<>();
-                    header.put("content-type","application/json");
-                    header.put("authorization","key=AIzaSyDMYebxipz5x6KH_iSOe25G6TFz_O54FVo");
-                    return header;
-                }
-            };
-
-            requestQueue.add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

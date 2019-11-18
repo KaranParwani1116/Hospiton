@@ -17,9 +17,11 @@
     </include>
 
 <RelativeLayout
+    android:id="@+id/main_back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/main_page_toolbar">
+
    <TextView
        android:id="@+id/sos_button"
        android:layout_width="170dp"
@@ -33,29 +35,30 @@
        android:background="@drawable/circle"/>
 
     <TextView
+        android:id="@+id/sos_button2"
         android:layout_width="190dp"
         android:layout_height="190dp"
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-medium"
         android:textSize="60sp"
-        android:text="@string/PanicButton"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:background="@drawable/circle1"/>
 
 
     <TextView
+        android:id="@+id/sos_button3"
         android:layout_width="210dp"
         android:layout_height="210dp"
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-medium"
         android:textSize="60sp"
-        android:text="@string/PanicButton"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:background="@drawable/circle2"/>
 
         <TextView
+            android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your safety is our priority"
@@ -67,13 +70,6 @@
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/colorPrimary"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sos_button"
-        android:layout_centerInParent="true"
-        android:id="@+id/test"
-        android:text="test_button"/>
 </RelativeLayout>
 
     </RelativeLayout>

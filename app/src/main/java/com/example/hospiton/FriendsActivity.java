@@ -17,8 +17,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -27,6 +31,8 @@ public class FriendsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private DatabaseReference usersref;
+    private FirebaseAuth mAuth;
+    private String user_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,22 @@ public class FriendsActivity extends AppCompatActivity {
         recyclerView=(RecyclerView)findViewById(R.id.find_friends_recyclerlist);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         usersref= FirebaseDatabase.getInstance().getReference().child("Users");
+        mAuth=FirebaseAuth.getInstance();
+
+        usersref.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("name"))
+                {
+                    user_name=dataSnapshot.child("name").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -61,6 +83,7 @@ public class FriendsActivity extends AppCompatActivity {
                         String visit_user_id=getRef(i).getKey();
                         Intent intent=new Intent(FriendsActivity.this,ProfileActivity.class);
                         intent.putExtra("visit_user_id",visit_user_id);
+                        intent.putExtra("User_name",user_name);
                         startActivity(intent);
                     }
                 });
