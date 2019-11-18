@@ -32,7 +32,9 @@
         <activity android:name=".Contacts_Fragment" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".textrecog" />
-        <activity android:name=".FriendsActivity" />
+        <activity android:name=".FriendsActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Setting_Theme"/>
         <activity android:name=".Destination" />
         <activity android:name=".User_Profile" />
         <activity android:name=".Verify" />

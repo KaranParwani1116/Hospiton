@@ -12,4 +12,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Setting_Theme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/PrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
 </resources>

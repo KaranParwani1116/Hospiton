@@ -2,16 +2,20 @@ package com.example.hospiton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -33,13 +37,24 @@ public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference usersref;
     private FirebaseAuth mAuth;
     private String user_name;
+    private Toolbar toolbar;
+    private Drawable d;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_24dp);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Find Friends");
 
         recyclerView=(RecyclerView)findViewById(R.id.find_friends_recyclerlist);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         usersref= FirebaseDatabase.getInstance().getReference().child("Users");
         mAuth=FirebaseAuth.getInstance();
 
@@ -58,9 +73,15 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -97,6 +118,7 @@ public class FriendsActivity extends AppCompatActivity {
                 return viewHolder;
             }
         };
+
 
         recyclerView.setAdapter(adapter);
         adapter.startListening();
