@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
@@ -21,6 +22,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -28,41 +31,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMessagingServce";
     private static final String ChannelId="Friend_Request";
     private static final int notification_id=1134;
-    private Bitmap image;
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(final RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        String notificationTitle = null, notificationBody = null;
-        String icon=null;
 
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            notificationTitle = remoteMessage.getNotification().getTitle();
-            notificationBody = remoteMessage.getNotification().getBody();
-            icon=remoteMessage.getNotification().getIcon();
 
-            Log.d("Service",icon);
+        AsyncTask<Void,Void,Void>asyncTask=new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                String notificationTitle = null, notificationBody = null;
+                Bitmap image=null;
+                if (remoteMessage.getNotification() != null) {
+                    Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+                    notificationTitle = remoteMessage.getNotification().getTitle();
+                    notificationBody = remoteMessage.getNotification().getBody();
+                    String icon=null;
+                    icon=remoteMessage.getNotification().getIcon();
 
-            try {
-                URL url=new URL(icon);
-                image=BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    Log.d("Service",icon);
+                    Log.d("Data","Message Data payload" + remoteMessage.getData());
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                    image=getBitmapfromUrl(icon);
+                }
+
+                // Also if you intend on generating your own notifications as a result of a received FCM
+                // message, here is where that should be initiated. See sendNotification method below.
+                sendNotification(notificationTitle, notificationBody,image);
+                return null;
             }
-        }
+        };
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(notificationTitle, notificationBody);
+        asyncTask.execute();
+        // Check if message contains a notification payload.
     }
 
-    private void sendNotification(String notificationTitle, String notificationBody) {
+    private void sendNotification(String notificationTitle, String notificationBody,Bitmap image) {
 
         NotificationManager notificationManager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
@@ -102,5 +107,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Resources res = context.getResources();
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.logo);
         return largeIcon;
+    }
+
+    public Bitmap getBitmapfromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+
+        } catch (Exception e) {
+            Log.e("awesome", "Error in getting notification image: " + e.getLocalizedMessage());
+            return null;
+        }
     }
 }

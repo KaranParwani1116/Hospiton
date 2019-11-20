@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class FriendsActivity extends AppCompatActivity {
     private String user_name;
     private Toolbar toolbar;
     private Drawable d;
+    private String url_image="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,10 @@ public class FriendsActivity extends AppCompatActivity {
                 if(dataSnapshot.hasChild("name"))
                 {
                     user_name=dataSnapshot.child("name").getValue().toString();
+                }
+                if(dataSnapshot.hasChild("image"))
+                {
+                    url_image=dataSnapshot.child("image").getValue().toString();
                 }
             }
 
@@ -104,7 +110,9 @@ public class FriendsActivity extends AppCompatActivity {
                         String visit_user_id=getRef(i).getKey();
                         Intent intent=new Intent(FriendsActivity.this,ProfileActivity.class);
                         intent.putExtra("visit_user_id",visit_user_id);
+                        Log.d("Friends",user_name);
                         intent.putExtra("User_name",user_name);
+                        intent.putExtra("Image",url_image);
                         startActivity(intent);
                     }
                 });

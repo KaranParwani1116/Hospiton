@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements request{
 
     private String receiveruserid,Current_State,sendUserID;
     private CircleImageView User_profile_image;
@@ -54,10 +55,13 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String username;
     private  String url_image;
+    private request mcallback;
+    private String usercontact="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        mcallback=this;
 
         mAuth=FirebaseAuth.getInstance();
         sendUserID=mAuth.getCurrentUser().getUid();
@@ -74,6 +78,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         receiveruserid=getIntent().getExtras().get("visit_user_id").toString();
         username=getIntent().getStringExtra("User_name");
+        url_image=getIntent().getStringExtra("Image");
+
+        Log.d("Image",url_image);
 
         User_profile_image=(CircleImageView)findViewById(R.id.visit_profile_image);
         Username=(TextView)findViewById(R.id.visit_user_name);
@@ -83,22 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
 
         Current_State="new";
 
-        userref.child(sendUserID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("image"))
-                {
-                    url_image=dataSnapshot.child("image").getValue().toString();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         RetreiveUserInfo();
+
     }
 
     private void RetreiveUserInfo() {
@@ -109,12 +104,14 @@ public class ProfileActivity extends AppCompatActivity {
                 {
                     Username.setText(dataSnapshot.child("name").getValue().toString());
                     Picasso.get().load(dataSnapshot.child("image").getValue().toString()).placeholder(R.drawable.profile_image).into(User_profile_image);
-
+                    usercontact=dataSnapshot.child(getString(R.string.contact)).getValue().toString();
                     ManageChatRequest();
                 }
                 else {
                     Username.setText(dataSnapshot.child("name").getValue().toString());
+                    usercontact=dataSnapshot.child(getString(R.string.contact)).getValue().toString();
                     ManageChatRequest();
+
                 }
             }
 
@@ -138,6 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
                     {
                         Current_State="request_sent";
                         SendRequest.setText("Cancel Chat Request");
+                        UserStatus.setVisibility(View.INVISIBLE);
                     }
                     else if(RequestType.equals("received"))
                     {
@@ -145,6 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
                         SendRequest.setText("Accept Request");
                         Cancel.setVisibility(View.VISIBLE);
                         Cancel.setEnabled(true);
+                        UserStatus.setVisibility(View.INVISIBLE);
                         Cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -162,6 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
                             {
                                 Current_State="friends";
                                 SendRequest.setText("Unfriend");
+                                mcallback.request_callback(usercontact);
                             }
                         }
 
@@ -374,5 +374,11 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void request_callback(String UserContact) {
+        UserStatus.setVisibility(View.VISIBLE);
+        UserStatus.setText("Contact Number:- "+UserContact);
     }
 }
