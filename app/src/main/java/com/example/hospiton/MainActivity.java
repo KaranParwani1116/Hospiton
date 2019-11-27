@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,7 +26,11 @@ import androidx.fragment.app.Fragment;
 
 
 import android.telephony.SmsManager;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private Toolbar toolbar;
-    private DatabaseReference Rootref;
+    private DatabaseReference Rootref,Dangerref;
     private GoogleSignInClient mGoogleSignInClient;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -79,14 +85,19 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
     private Animation fade;
     private LocationManager locationManager;
     private MyCallback myCallback;
+    private TextView gotolink;
     private String Username;
     private String userimage;
+    private MediaPlayer mediaPlayer;
+    private int length;
 
     private RelativeLayout relativeLayout;
 
     private static final int Permission_All = 1;
     private String url_imp="https://fcm.googleapis.com/fcm/send";
     private RequestQueue requestQueue;
+    String Google="https://www.google.com";
+    String gotogogle="Google";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +110,13 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
         firebaseAuth=FirebaseAuth.getInstance();
         firebaseUser=firebaseAuth.getCurrentUser();
         Rootref=FirebaseDatabase.getInstance().getReference();
+        Dangerref=FirebaseDatabase.getInstance().getReference();
         sos_text=(TextView)findViewById(R.id.sos_button);
         d=getResources().getDrawable(R.drawable.circle3);
         message=(TextView)findViewById(R.id.message);
         fade= AnimationUtils.loadAnimation(this,R.anim.fade);
+        mediaPlayer=MediaPlayer.create(this,R.raw.emergency);
+        length=mediaPlayer.getCurrentPosition();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         relativeLayout=(RelativeLayout)findViewById(R.id.main_back);
@@ -134,6 +148,9 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
 
         setnavigation();
         onClicklistener();
+
+
+
 
     }
 
@@ -201,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
         sos_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mediaPlayer.start();
                 sos_text.setBackground(d);
                 sos_text.setTextColor(getResources().getColor(R.color.change_background));
                 message.setTextColor(getResources().getColor(R.color.white));
@@ -311,6 +330,19 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("Main", "On Back Pressed");
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -350,6 +382,38 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
                if(dataSnapshot.child(getString(R.string.name)).exists())
                {
                  Toast.makeText(MainActivity.this,"Welcome",Toast.LENGTH_SHORT).show();
+                   Dangerref.child("Danger").addValueEventListener(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                           if(dataSnapshot.exists())
+                           {
+                               LayoutInflater inflater=getLayoutInflater();
+                               View convert=(View)inflater.inflate(R.layout.danger_text,null);
+                               gotolink=(TextView)convert.findViewById(R.id.link_textview);
+                               String latitude=dataSnapshot.child("latitude").getValue().toString();
+                               String longitude=dataSnapshot.child("longitude").getValue().toString();
+                               Google="https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude;
+                               gotogogle="Track him";
+                               gotolink.setText(Html.fromHtml("<a href=\""+ Google + "\">" + gotogogle + "</a>"));
+                               gotolink.setClickable(true);
+                               gotolink.setMovementMethod(LinkMovementMethod.getInstance());
+
+                               AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                               builder.setView(convert);
+                               builder.setTitle("Danger!!");
+                               builder.setCancelable(true);
+
+                               AlertDialog alertDialog=builder.create();
+                               alertDialog.show();
+
+                           }
+                       }
+
+                       @Override
+                       public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                       }
+                   });
                }
                else
                {
@@ -372,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
         Toast.makeText(this,String.valueOf(phone1.replaceAll("\\s","").length()),Toast.LENGTH_LONG).show();
 
         Double latitude=0.0;
-        Double longitude;
+        Double longitude=0.0;
         String Message="";
 
         LocationListener locationListener = new MyLocationListener(this);
@@ -386,13 +450,45 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
         {
             latitude=MyLocationListener.latitude;
             longitude=MyLocationListener.longitude;
-            Message+= "Please Help Me I Am in Trouble"+ "\n My Location is https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude;
+            /*gotolink.setText(Html.fromHtml("<a href=\""+ Google + "\">" + gotogogle + "</a>"));
+            gotolink.setClickable(true);
+            gotolink.setMovementMethod(LinkMovementMethod.getInstance());*/
 
         }
+        else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
+            latitude=MyLocationListener.latitude;
+            longitude=MyLocationListener.longitude;
+            /*gotolink.setText(Html.fromHtml("<a href=\""+ Google + "\">" + gotogogle + "</a>"));
+            gotolink.setClickable(true);
+            gotolink.setMovementMethod(LinkMovementMethod.getInstance());*/
+        }
+
+        Map<String,String>location=new HashMap<>();
+        location.put("latitude", String.valueOf(latitude));
+        location.put("longitude",String.valueOf(longitude));
+
+        Dangerref.child("Danger").setValue(location).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Message+= "Please Help Me I Am in Trouble"+ "\n My Location is https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude;
+        Google="https://www.google.com/maps/search/?api=1&query="+latitude+","+longitude;
 
         String Message2="Destination:-"+Destination;
 
         Log.d("Interface",Destination);
+        Log.d("Message",Message);
 
         SmsManager smsManager1=SmsManager.getDefault();
         SmsManager smsManager2=SmsManager.getDefault();
@@ -442,6 +538,17 @@ public class MainActivity extends AppCompatActivity implements MyCallback{
             requestQueue.add(request);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mediaPlayer.isPlaying())
+        {
+            mediaPlayer.pause();
         }
     }
 }

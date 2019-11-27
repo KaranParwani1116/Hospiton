@@ -3,7 +3,9 @@ package com.example.hospiton;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +33,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMessagingServce";
     private static final String ChannelId="Friend_Request";
     private static final int notification_id=1134;
+    private static final int Gotoreq = 3417;
+
 
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
@@ -85,7 +89,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(notificationBody)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true)
-                .setSound(alarmSound);
+                .setSound(alarmSound)
+                .setContentIntent(reqfragment(this));
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.logo);
@@ -122,5 +127,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e("awesome", "Error in getting notification image: " + e.getLocalizedMessage());
             return null;
         }
+    }
+
+    private PendingIntent reqfragment(Context context)
+    {
+        Intent startintent=new Intent(this,MainActivity.class);
+
+        return PendingIntent.getActivity(context,Gotoreq,startintent,PendingIntent.FLAG_UPDATE_CURRENT);
+
     }
 }

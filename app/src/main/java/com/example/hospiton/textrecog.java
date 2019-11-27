@@ -14,14 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class textrecog extends AppCompatActivity {
 
@@ -30,6 +36,8 @@ public class textrecog extends AppCompatActivity {
     private Bitmap bitmap;
     private TextView recognize;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 102;
+    private FirebaseAuth mAuth;
+    private DatabaseReference userref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,8 @@ public class textrecog extends AppCompatActivity {
         btncamera=(Button)findViewById(R.id.btncamera);
         take=(ImageView)findViewById(R.id.picture);
         recognize=(TextView)findViewById(R.id.display_text);
+        mAuth=FirebaseAuth.getInstance();
+        userref=FirebaseDatabase.getInstance().getReference();
 
         if (ContextCompat.checkSelfPermission(textrecog.this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -124,6 +134,20 @@ public class textrecog extends AppCompatActivity {
                 sb.append("\n");
             }
             recognize.setText(sb.toString());
+
+
+            if(sb!=null)
+            {
+                  userref.child("Users").child(mAuth.getCurrentUser().getUid()).child("Number Plate").setValue(sb.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                      @Override
+                      public void onComplete(@NonNull Task<Void> task) {
+                          if(task.isSuccessful())
+                          {
+
+                          }
+                      }
+                  });
+            }
         }
     }
 }

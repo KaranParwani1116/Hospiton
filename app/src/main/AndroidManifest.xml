@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Request_Fragment"></activity>
+        <activity android:name=".Request_Fragment"
+            android:theme="@style/Setting_Theme"></activity>
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
@@ -41,7 +42,8 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".Contacts_Fragment" />
+        <activity android:name=".Contacts_Fragment"
+            android:theme="@style/Setting_Theme"/>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".textrecog" />
         <activity

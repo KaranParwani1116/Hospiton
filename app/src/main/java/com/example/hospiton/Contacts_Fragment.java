@@ -29,6 +29,7 @@ public class Contacts_Fragment extends AppCompatActivity {
     private DatabaseReference ContactsRef,Userref;
     private FirebaseAuth mAuth;
     private String CurrentUserid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,8 @@ public class Contacts_Fragment extends AppCompatActivity {
 
         ContactsRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(CurrentUserid);
         Userref=FirebaseDatabase.getInstance().getReference().child("Users");
+
+        getSupportActionBar().setTitle("Contacts");
     }
 
     @Override

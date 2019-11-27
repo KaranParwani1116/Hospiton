@@ -37,7 +37,7 @@ public class FriendsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DatabaseReference usersref;
     private FirebaseAuth mAuth;
-    private String user_name;
+    private String user_name="";
     private Toolbar toolbar;
     private Drawable d;
     private String url_image="";
@@ -110,7 +110,6 @@ public class FriendsActivity extends AppCompatActivity {
                         String visit_user_id=getRef(i).getKey();
                         Intent intent=new Intent(FriendsActivity.this,ProfileActivity.class);
                         intent.putExtra("visit_user_id",visit_user_id);
-                        Log.d("Friends",user_name);
                         intent.putExtra("User_name",user_name);
                         intent.putExtra("Image",url_image);
                         startActivity(intent);

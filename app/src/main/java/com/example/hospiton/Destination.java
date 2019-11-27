@@ -176,6 +176,10 @@ public class Destination extends AppCompatActivity {
                 usersref.child(getString(R.string.Users)).child(mAuth.getCurrentUser().getUid()).child(getString(R.string.User_Destination)).setValue(destination_address).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
+
+                        }
 
                     }
                 });

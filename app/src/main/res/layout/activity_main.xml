@@ -70,6 +70,7 @@
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/colorPrimary"/>
 
+
 </RelativeLayout>
 
     </RelativeLayout>

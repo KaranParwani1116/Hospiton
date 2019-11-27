@@ -47,6 +47,7 @@ public class Request_Fragment extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
+        getSupportActionBar().setTitle("Friend Requests");
     }
 
     @Override

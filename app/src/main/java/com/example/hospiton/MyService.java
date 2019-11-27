@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MyService extends Service {
     private static final String ChannelId="It's a match id";
     private static final int notification_id=1134;
+    boolean variable=true;
     private FirebaseAuth mAuth;
     private DatabaseReference contactsRef,userref,receiverref;
     private String Destination1,Destination2;
@@ -43,81 +44,83 @@ public class MyService extends Service {
 
         onTaskRemoved(intent);
 
-        mAuth=FirebaseAuth.getInstance();
-        String CurrentUserId=mAuth.getCurrentUser().getUid();
-        contactsRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(CurrentUserId);
-        userref=FirebaseDatabase.getInstance().getReference();
-        receiverref=FirebaseDatabase.getInstance().getReference();
+        if(variable) {
 
-        userref.child("Users").child(CurrentUserId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("Destination"))
-                {
-                    Destination1=dataSnapshot.child("Destination").getValue().toString();
+            mAuth = FirebaseAuth.getInstance();
+            String CurrentUserId = mAuth.getCurrentUser().getUid();
+            contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(CurrentUserId);
+            userref = FirebaseDatabase.getInstance().getReference();
+            receiverref = FirebaseDatabase.getInstance().getReference();
+
+            userref.child("Users").child(CurrentUserId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild("Destination")) {
+                        Destination1 = dataSnapshot.child("Destination").getValue().toString();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
-        contactsRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String receiverid=dataSnapshot.getKey();
-                Log.d("Service",receiverid);
+            contactsRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    String receiverid = dataSnapshot.getKey();
+                    Log.d("Service", receiverid);
 
-                receiverref.child("Users").child(receiverid).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.hasChild("Destination"))
-                        {
-                           Destination2=dataSnapshot.child("Destination").getValue().toString();
+                    receiverref.child("Users").child(receiverid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild("Destination")) {
+                                Destination2 = dataSnapshot.child("Destination").getValue().toString();
 
-                           Log.d("Destination1",Destination1);
-                           Log.d("Destination2",Destination2);
+                                Log.d("Destination1", Destination1);
+                                Log.d("Destination2", Destination2);
 
-                           if(Destination1.equals(Destination2))
-                           {
-                               buildnotification();
-                           }
+                                if (Destination1.equals(Destination2)) {
+                                    buildnotification();
+                                }
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
 
-            }
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+            variable=false;
+        }
 
 
-        return START_STICKY;
+
+        return START_NOT_STICKY;
     }
 
     public void buildnotification()
@@ -147,15 +150,6 @@ public class MyService extends Service {
             builder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
         notificationManager.notify(notification_id, builder.build());
-    }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        Intent restartservice=new Intent(getApplicationContext(),this.getClass());
-        restartservice.setPackage(getPackageName());
-        startService(restartservice);
-
-        super.onTaskRemoved(rootIntent);
     }
 
     @Override
